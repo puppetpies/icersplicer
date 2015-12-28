@@ -1,4 +1,4 @@
-Icesplicer
+Icersplicer
 ==========
 
 Text file manipulation with the Ruby progamming language.

@@ -35,7 +35,7 @@ opts = GetoptLong.new(
   [ '--inputfile', '-i', GetoptLong::REQUIRED_ARGUMENT],
   [ '--skiplines', '-s', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--quiet', '-q', GetoptLong::OPTIONAL_ARGUMENT],
-  [ '--outputfile', '-o', GetoptLong::NO_ARGUMENT]
+  [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT]
 )
 
 opts.each do |opt, arg|
@@ -84,28 +84,13 @@ linecounter = 0
 quietmode = false | @quiet_mode
 
 inputfile = @inputfile
-outputfile = @outputfile
-
-=begin
-def skip(line)
-  puts "Lines: #{line}"
-  line_element = @skip_lines.index(line)
-  puts "Element ID: #{line_element}"
-  if line_element != nil
-    skiper = @skip_lines[line_element]
-    puts "Skiper: #{skiper} Line element: #{line_element}"
-    @skip_lines.delete_at(line_element)
-  end
-  return skiper
-end
-=end
+@nfile = 0
 
 def skip(line)
   begin
     line_element = @skip_lines.index(line)
     if line_element != nil
       skiper = @skip_lines[line_element]
-      @skip_lines.delete_at(line_element)
     end
   rescue NoMethodError
     return nil
@@ -115,15 +100,6 @@ end
 
 def print_to_screen(linenum, text, quiet)
   puts "\e[1;33mLn: #{linenum}:\e[0m\ #{text}" unless quiet == true
-end
-
-def checkoutputfile?
-  if File.exists?("#{@outputfile}")
-    return false
-  else
-    openfile unless instance_variable_defined?("@exp")
-    return true
-  end
 end
 
 def openfile
@@ -141,24 +117,23 @@ def closefile
 end
 
 def processdata(data, quietmode)
-    if checkoutputfile?
-      writefile(data)
-    else
-      puts "File already exists..."
-    end
+  openfile if @nfile == 0
+  writefile(data)
+  @nfile += 1
 end
 
 File.open(inputfile) {|n|
   n.each_line {|data|
+    data_orig = data.clone
     unless lineoffset > increment_offset
       unless linelimit == 0
         unless increment_limit > linelimit
           print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
-          processdata(data, quietmode) if instance_variable_defined?("@outputfile")
+          processdata(data_orig, quietmode) unless skip(linecounter)
         end
       else
         print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
-        processdata(data, quietmode) if instance_variable_defined?("@outputfile")
+        processdata(data_orig, quietmode) unless skip(linecounter)
       end
       increment_limit += 1
     end

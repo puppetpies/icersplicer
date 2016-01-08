@@ -102,12 +102,9 @@ end
 
 def skip(line)
   begin
-    #puts "Lines: #{line}"
     line_element = @skip_lines.index(line)
-    #puts "Element ID: #{line_element}"
     if line_element != nil
       skiper = @skip_lines[line_element]
-      #puts "Skiper: #{skiper} Line element: #{line_element}"
       @skip_lines.delete_at(line_element)
     end
   rescue NoMethodError

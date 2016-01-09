@@ -31,11 +31,12 @@ opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
   [ '--lineoffset', '-l', GetoptLong::REQUIRED_ARGUMENT],
   [ '--linelimit', '-n', GetoptLong::REQUIRED_ARGUMENT],
-  [ '--incrementlimit', '-i', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--incrementlimit', '-i', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--inputfile', '-f', GetoptLong::REQUIRED_ARGUMENT],
   [ '--skiplines', '-s', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--quiet', '-q', GetoptLong::OPTIONAL_ARGUMENT],
-  [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT]
+  [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT],
+  [ '--countlines', '-c', GetoptLong::OPTIONAL_ARGUMENT]
 )
 
 opts.each do |opt, arg|
@@ -49,7 +50,7 @@ opts.each do |opt, arg|
 
 Example:
       
-      ruby icersplicer.rb -i inputfile --lineoffset 0 --linelimit 10 --incrementlimit 0 -s 3,6,9 -o outputfile 
+      ruby icersplicer.rb -i inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile 
       
       ]
       puts helper
@@ -73,18 +74,43 @@ Example:
       else
         @quiet_mode = false
       end
+    when '--countlines'
+      @countlines = true
   end
 end
 
 lineoffset = @line_offset
-linelimit = @line_limit
+unless instance_variable_defined?("@line_limit") 
+  linelimit = 0
+else
+  linelimit = @line_limit
+end
 increment_offset = 0
-increment_limit = @increment_limit
+unless instance_variable_defined?("@increment_limit")
+  increment_limit = 1
+else
+  increment_limit = @increment_limit
+end
 linecounter = 0
 quietmode = false | @quiet_mode
 
 inputfile = @inputfile
 @nfile = 0
+
+def countlines(inputfile)
+  lines = 0
+  File.open(inputfile) {|n|
+    n.each_line {
+      lines += 1
+    }
+  }
+  puts "Filename: #{inputfile} Total Line Count: #{lines}"
+end
+
+if @countlines == true
+  countlines(inputfile)
+  exit
+end
 
 def skip(line)
   begin
@@ -122,24 +148,45 @@ def processdata(data, quietmode)
   @nfile += 1
 end
 
-File.open(inputfile) {|n|
-  n.each_line {|data|
-    data_orig = data.clone
-    unless lineoffset > increment_offset
-      unless linelimit == 0
-        unless increment_limit > linelimit
+def stats(inputfile)
+  print "Inputfile lines: "
+  countlines(inputfile)
+  print "Outputfile lines: "
+  countlines(@outputfile)
+end
+
+unless File.exist?("#{inputfile}")
+  puts "Input filename / location doesn't exist... ?"
+  exit
+end
+
+begin
+  File.open(inputfile) {|n|
+    n.each_line {|data|
+      data_orig = data.clone
+      unless lineoffset > increment_offset
+        unless linelimit == 0
+          unless increment_limit > linelimit
+            print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
+            processdata(data_orig, quietmode) unless skip(linecounter)
+          end
+        else
           print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
           processdata(data_orig, quietmode) unless skip(linecounter)
         end
-      else
-        print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
-        processdata(data_orig, quietmode) unless skip(linecounter)
+        increment_limit += 1
       end
-      increment_limit += 1
-    end
-    increment_offset += 1
-    linecounter += 1
+      increment_offset += 1
+      linecounter += 1
+    }
   }
-}
+rescue NoMethodError
+  puts "Welcome to Icersplicer"
+  puts "_-_-_-_-_-_-_-_-_-_-_-|\n\n"
+  puts "Requires -f inputfile --lineoffset 0 --linelimit 0"
+  puts "Linelimit set to 0 is the whole file -o outputfile optional\n\n"
+  puts "Usage: icersplicer.rb -f voc_dump.sql --lineoffset 0 --linelimit 60 -o voctest.sql"
+end
 
 closefile if instance_variable_defined?("@exp")
+stats(inputfile)

@@ -31,8 +31,8 @@ opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
   [ '--lineoffset', '-l', GetoptLong::REQUIRED_ARGUMENT],
   [ '--linelimit', '-n', GetoptLong::REQUIRED_ARGUMENT],
-  [ '--incrementlimit', '-p', GetoptLong::REQUIRED_ARGUMENT],
-  [ '--inputfile', '-i', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--incrementlimit', '-i', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--inputfile', '-f', GetoptLong::REQUIRED_ARGUMENT],
   [ '--skiplines', '-s', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--quiet', '-q', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT]

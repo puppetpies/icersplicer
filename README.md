@@ -8,5 +8,7 @@ that they don't do certain things like offsets the ability to skip lines etc..
 
 Thats where icersplicer comes in.
 
+It also features fun keyword highlighting randomization !
+
 ![Icesplicer](https://raw.githubusercontent.com/puppetpies/icersplicer/master/icersplicer.jpg)
 

@@ -12,3 +12,5 @@ It also features fun keyword highlighting randomization !
 
 ![Icesplicer](https://raw.githubusercontent.com/puppetpies/icersplicer/master/icersplicer.jpg)
 
+![Icersplicer Nova](https://raw.githubusercontent.com/puppetpies/icersplicer/master/Icersplicer-nova.png)
+

@@ -1,6 +1,8 @@
 Icersplicer
 ==========
 
+![Icersplicer Nova](https://raw.githubusercontent.com/puppetpies/icersplicer/master/Icersplicer-nova.png)
+
 Text file manipulation with the Ruby progamming language.
 
 A tool for people who are fans of UNIX tools like cat / head / tail but realize
@@ -11,6 +13,4 @@ Thats where icersplicer comes in.
 It also features fun keyword highlighting randomization !
 
 ![Icesplicer](https://raw.githubusercontent.com/puppetpies/icersplicer/master/icersplicer.jpg)
-
-![Icersplicer Nova](https://raw.githubusercontent.com/puppetpies/icersplicer/master/Icersplicer-nova.png)
 

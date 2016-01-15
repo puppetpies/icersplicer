@@ -1,3 +1,4 @@
+#!/usr/bin/ruby
 ########################################################################
 #
 # Author: Brian Hood
@@ -42,7 +43,7 @@ opts.each do |opt, arg|
 
 Example:
       
-      ruby icersplicer.rb -i inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile 
+      icersplicer -i inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile 
       
       ]
       puts helper

@@ -1,6 +1,6 @@
 require './lib/icersplicer.rb'
 
-VERSION = Icesplicer::VERSION::STRING
+VERSION = Icersplicer::VERSION::STRING
 
 Gem::Specification.new do |s|
   s.name        = 'icersplicer'

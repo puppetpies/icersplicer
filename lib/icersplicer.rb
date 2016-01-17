@@ -91,8 +91,8 @@ module Icersplicer
   def stats(inputfile, outputfile)
     print "Inputfile lines: "
     countlines(inputfile)
-    print "Outputfile lines: "
-    countlines(outputfile)
+    #print "Outputfile lines: "
+    #countlines(outputfile)
   end
 
 end

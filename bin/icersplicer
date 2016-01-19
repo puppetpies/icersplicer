@@ -3,10 +3,11 @@
 #
 # Author: Brian Hood
 # Name: Icersplicer
+# Email: brianh6854@googlemail.com
 #
 # Description: 
-#   Text processing with power with very minimal mruby for performance
-#   that only has a File class extension mruby-io
+#   Tool for file manipulation similar to UNIX tools
+#   like cat / head / tail
 #
 # Why: for processing large datasets quickly.
 ########################################################################
@@ -19,6 +20,8 @@ require File.expand_path(File.join(
 
 include Icersplicer
 
+VERSION = Icersplicer::VERSION::STRING
+
 ARGV[0] = "--help" if ARGV[0] == nil
 
 opts = GetoptLong.new(
@@ -28,6 +31,7 @@ opts = GetoptLong.new(
   [ '--incrementlimit', '-i', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--inputfile', '-f', GetoptLong::REQUIRED_ARGUMENT],
   [ '--skiplines', '-s', GetoptLong::OPTIONAL_ARGUMENT],
+  [ '--skipblank', '-b', GetoptLong::NO_ARGUMENT ],
   [ '--quiet', '-q', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--countlines', '-c', GetoptLong::OPTIONAL_ARGUMENT]
@@ -36,16 +40,25 @@ opts = GetoptLong.new(
 opts.each do |opt, arg|
   case opt
     when '--help'
-      helper = "\e[1;34mWelcome to Icersplicer\e[0m\ \n"
-      helper << "\e[1;34m=====================\e[0m\ \n"
+      helper = "\e[1;34mWelcome to Icersplicer #{VERSION}\e[0m\ \n"
+      helper << "\e[1;34m============================\e[0m\ \n"
       helper << %q[
--h, --help:
+-h, --help '-h':
    show help
-
+--lineoffset '-l' INTEGER
+--linelimit '-n' INTEGER
+--inputfile '-f' filename
+--skiplines '-s' LINE NUMBERS 3,5,6
+--skipblank '-b' NO ARGUMENTS
+--quiet '-q' NO ARGUMENTS
+--outputfile '-o' filename
+--countlines '-c' Counts the lines of a file
+  
 Example:
       
       icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile 
-      
+
+Written by Brian Hood
       ]
       puts helper
       exit
@@ -63,6 +76,9 @@ Example:
     when '--skiplines'
       @skip_lines = Array.new
       arg.to_s.split(",").each {|n| @skip_lines << n.to_i }
+    when '--skipblank'
+      @skipblank = "SKIP"
+      puts @skipblank
     when '--quiet'
       if arg == "true"
         @quiet_mode = true
@@ -114,15 +130,19 @@ File.open(inputfile) {|n|
     unless lineoffset > increment_offset
       unless linelimit == 0
         unless increment_limit > linelimit
+          unless instance_variable_defined?("@skipblank") and data.strip  == ""
+            print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
+            if instance_variable_defined?("@outputfile")
+              processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+            end
+          end
+        end
+      else
+        unless instance_variable_defined?("@skipblank") and data.strip == ""
           print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
           if instance_variable_defined?("@outputfile")
             processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
           end
-        end
-      else
-        print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
-        if instance_variable_defined?("@outputfile")
-          processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
         end
       end
       increment_limit += 1

@@ -56,7 +56,10 @@ opts.each do |opt, arg|
   
 Example:
       
-      icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile 
+      icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile
+      
+      TIPS: Create a custom keywords list in your /home/username/.icersplicer/keywords.ice
+      
 
 Written by Brian Hood
       ]

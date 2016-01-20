@@ -24,13 +24,34 @@ module Icersplicer
   
   @@nfile = 0
   @@exp = nil
+  @@keywordsfile = "keywords.ice"
+  
+  def load_keywords(file)
+    keys = Array.new
+    unless Dir.exists?("#{Dir.home}/.icersplicer")
+      Dir.mkdir("#{Dir.home}/.icersplicer")
+    end
+    if File.exists?("#{Dir.home}/.icersplicer/#{file}")
+      File.open("#{Dir.home}/.icersplicer/#{file}") {|n|
+        n.each_line {|l|
+          keys << l.strip
+        }
+      }
+      return keys
+    else
+      return false
+    end
+  end
   
   def text_highlighter(text)
+    keys = load_keywords("#{@@keywordsfile}")
+    if keys == false
     keys = ["Ln:", "SELECT", "CREATE TABLE", "UPDATE", "DELETE", "INSERT", "FROM", "OFFSET", "GROUP BY", "HAVING", "ORDER BY",
             "ALTER USER", "ALTER TABLE", "COPY", "INTO", "VALUES", "DELIMITERS", "STDIN", "CREATE USER", "WITH", "USING",
             "CREATE INDEX", "CONSTRAINT", "ALTER INDEX", "INTEGER", "CHAR", "CLOB", "VARCHAR", "STRING", "DEFAULT", "NULL", "NOT",
             "RECORDS", "KEY", "PRIMARY", "FOREIGN", "BIGINT", "MERGE", "REMOTE", "DROP TABLE", "SET SCHEMA", "CREATE SCHEMA",
             "ALTER SCHEMA", "ADD", "TABLE", "CREATE SEQUENCE", "ALTER SEQUENCE"]
+    end
     cpicker = [2,3,4,1,7,5,6] # Just a selection of colours
     keys.each {|n|
       text.gsub!("#{n}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n}\e[0m\ \e[0;32m".strip)

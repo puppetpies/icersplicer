@@ -42,7 +42,7 @@ opts.each do |opt, arg|
     when '--help'
       helper = "\e[1;34mWelcome to Icersplicer #{VERSION}\e[0m\ \n"
       helper << "\e[1;34m============================\e[0m\ \n"
-      helper << %q[
+      helper << %Q[
 -h, --help '-h':
    show help
 --lineoffset '-l' INTEGER
@@ -58,7 +58,7 @@ Example:
       
       icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile
       
-      TIPS: Create a custom keywords list in your /home/username/.icersplicer/keywords.ice
+      TIPS: Create a custom keywords list in your #{Dir.home}/.icersplicer/keywords.ice
       
 
 Written by Brian Hood

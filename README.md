@@ -1,6 +1,8 @@
 Icersplicer
 ==========
 
+[![Gem Version](https://badge.fury.io/rb/icersplicer.svg)](https://badge.fury.io/rb/icersplicer)
+
 ![Icersplicer Nova](https://raw.githubusercontent.com/puppetpies/icersplicer/master/Icersplicer-nova.png)
 
 Text file manipulation with the Ruby progamming language.

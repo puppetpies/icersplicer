@@ -117,7 +117,6 @@ module Icersplicer
           }
         end
     }
-    pp skip_lines
     return skip_lines
   end
   

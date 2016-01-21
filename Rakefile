@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://github.com/puppetpies/icersplicer'
   s.license       = 'GPLv2'
+  
+  s.add_runtime_dependency "walltime", "~> 0.0.5"
 end
 
 require 'rubygems/tasks'

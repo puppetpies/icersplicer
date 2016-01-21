@@ -51,7 +51,7 @@ opts.each do |opt, arg|
 --linelimit '-n' INTEGER
 --inputfile '-f' filename
 --skiplines '-s' LINE NUMBERS 3,5,6
---skipblank '-b' NO ARGUMENTS
+--skipblank '-b' NO ARGUMENTS ( Ommit blank lines )
 --quiet '-q' NO ARGUMENTS
 --outputfile '-o' filename
 --countlines '-c' Counts the lines of a file
@@ -60,7 +60,7 @@ opts.each do |opt, arg|
   
 Example:
       
-      icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9 -o outputfile
+      icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9,10-15 -o outputfile
       
       TIPS: Create a custom keywords list in your #{Dir.home}/.icersplicer/keywords.ice
       
@@ -82,7 +82,26 @@ Written by Brian Hood
       puts "Outputfile: #{@outputfile}"
     when '--skiplines'
       @skip_lines = Array.new
-      arg.to_s.split(",").each {|n| @skip_lines << n.to_i }
+      arg.to_s.split(",").each {|n| 
+          @skip_lines << n.to_i
+          # Allow line ranges 
+          min = n.split("-")[0].to_i
+          max = n.split("-")[1].to_i
+          unless n.split("-")[1] == nil 
+            begin
+              if min > max and max != 0
+                return false
+              end
+            rescue
+              puts "Range Error: Minimun value can't be more than Maxiumun Range value"
+              exit
+            end
+            min.upto(max) {|s|
+              @skip_lines << s
+            }
+          end
+      }
+      @skip_lines.uniq!
     when '--skipblank'
       @skipblank = "SKIP"
     when '--quiet'

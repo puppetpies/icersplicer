@@ -48,7 +48,16 @@ module Icersplicer
       return false
     end
   end
-  
+
+  def text_processor(data)
+    unless instance_variable_defined?("@nohighlighter")
+      data = text_highlighter(data)
+      return data
+    else
+      return data
+    end
+  end
+
   def text_highlighter(text)
     keys = load_keywords("#{@@keywordsfile}")
     if keys == false
@@ -64,9 +73,7 @@ module Icersplicer
         text.gsub!("#{n}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n}\e[0m\ \e[0;32m".strip)
       else
         name = n.split("##")[1].split("=")[1]
-        #puts "Colour: #{name} #{COLOURS[name]}"
         cnum = COLOURS[name].to_i
-        #puts "NVal: #{n}"
         nval = n.split("##")[0]
         text.gsub!("#{nval}", "\e[4;3#{cnum}m#{nval}\e[0m\ \e[0;32m".strip)
       end
@@ -88,7 +95,32 @@ module Icersplicer
       end
     end
   end
-
+  
+  def skip_processor(filter)
+    skip_lines = Array.new
+    filter.to_s.split(",").each {|n| 
+        skip_lines << n.to_i
+        # Allow line ranges 
+        min = n.split("-")[0].to_i
+        max = n.split("-")[1].to_i
+        unless n.split("-")[1] == nil 
+          begin
+            if min > max and max != 0
+              return false
+            end
+          rescue
+            puts "Range Error: Minimun value can't be more than Maxiumun Range value"
+            exit
+          end
+          min.upto(max) {|s|
+            skip_lines << s unless skip_lines[skip_lines.size - 1] == s
+          }
+        end
+    }
+    pp skip_lines
+    return skip_lines
+  end
+  
   def skip(line)
     begin
       line_element = @skip_lines.index(line)

@@ -97,11 +97,10 @@ Written by Brian Hood
               exit
             end
             min.upto(max) {|s|
-              @skip_lines << s
+              @skip_lines << s unless @skip_lines[@skip_lines.size - 1] == s
             }
           end
       }
-      @skip_lines.uniq!
     when '--skipblank'
       @skipblank = "SKIP"
     when '--quiet'

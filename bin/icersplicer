@@ -81,7 +81,6 @@ Written by Brian Hood
       arg.to_s.split(",").each {|n| @skip_lines << n.to_i }
     when '--skipblank'
       @skipblank = "SKIP"
-      puts @skipblank
     when '--quiet'
       if arg == "true"
         @quiet_mode = true
@@ -127,33 +126,36 @@ unless File.exist?("#{inputfile}")
   exit
 end
 
-File.open(inputfile) {|n|
-  n.each_line {|data|
-    data_orig = data.clone
-    unless lineoffset > increment_offset
-      unless linelimit == 0
-        unless increment_limit > linelimit
-          unless instance_variable_defined?("@skipblank") and data.strip  == ""
+begin
+  File.open(inputfile) {|n|
+    n.each_line {|data|
+      data_orig = data.clone
+      unless lineoffset > increment_offset
+        unless linelimit == 0
+          unless increment_limit > linelimit
+            unless instance_variable_defined?("@skipblank") and data.strip  == ""
+              print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
+              if instance_variable_defined?("@outputfile")
+                processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+              end
+            end
+          end
+        else
+          unless instance_variable_defined?("@skipblank") and data.strip == ""
             print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
             if instance_variable_defined?("@outputfile")
               processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
             end
           end
         end
-      else
-        unless instance_variable_defined?("@skipblank") and data.strip == ""
-          print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
-          if instance_variable_defined?("@outputfile")
-            processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
-          end
-        end
+        increment_limit += 1
       end
-      increment_limit += 1
-    end
-    increment_offset += 1
-    linecounter += 1
+      increment_offset += 1
+      linecounter += 1
+    }
   }
-}
-
+rescue Errno::EPIPE
+  puts "Closing session due to broken pipe"
+end
 closefile if instance_variable_defined?("@exp")
 stats(inputfile, outputfile)

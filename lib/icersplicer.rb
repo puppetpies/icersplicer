@@ -12,20 +12,26 @@
 module Icersplicer
 
   module VERSION #:nodoc:
-
     MAJOR = 0
     MINOR = 2
     TINY = 8
     CODENAME = "Icestorm !"
-
     STRING = [MAJOR, MINOR, TINY].join('.')
-
   end
   
   @@nfile = 0
   @@exp = nil
   @@keywordsfile = "keywords.ice"
-  
+
+  COLOURS = {"black" => 0,
+             "red" => 1, 
+             "green" => 2, 
+             "yellow" => 3, 
+             "blue" => 4,
+             "purple" => 5,
+             "cyan" => 6,
+             "white" => 7}
+                
   def load_keywords(file)
     keys = Array.new
     unless Dir.exists?("#{Dir.home}/.icersplicer")
@@ -34,7 +40,7 @@ module Icersplicer
     if File.exists?("#{Dir.home}/.icersplicer/#{file}")
       File.open("#{Dir.home}/.icersplicer/#{file}") {|n|
         n.each_line {|l|
-          keys << l.strip
+          keys << l.strip unless l.strip == ""
         }
       }
       return keys
@@ -54,7 +60,17 @@ module Icersplicer
     end
     cpicker = [2,3,4,1,7,5,6] # Just a selection of colours
     keys.each {|n|
-      text.gsub!("#{n}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n}\e[0m\ \e[0;32m".strip)
+      if n.split("##")[1] == nil
+        text.gsub!("#{n}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n}\e[0m\ \e[0;32m".strip)
+      else
+        name = n.split("##")[1].split("=")[1]
+        #puts "Colour: #{name} #{COLOURS[name]}"
+        cnum = COLOURS[name].to_i
+        #puts "NVal: #{n}"
+        nval = n.split("##")[0]
+        text.gsub!("#{nval}", "\e[4;3#{cnum}m#{nval}\e[0m\ \e[0;32m".strip)
+      end
+      text.gsub!(" \e[0;32m", "\e[0;32m")
     }
     return text
   end

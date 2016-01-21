@@ -36,7 +36,9 @@ opts = GetoptLong.new(
   [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--countlines', '-c', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--grep', '-g', GetoptLong::REQUIRED_ARGUMENT],
-  [ '--nohighlighter', '-t', GetoptLong::NO_ARGUMENT ]
+  [ '--nohighlighter', '-t', GetoptLong::NO_ARGUMENT ],
+  [ '--search', '-1', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--replace', '-2', GetoptLong::REQUIRED_ARGUMENT]
 )
 
 opts.each do |opt, arg|
@@ -57,7 +59,9 @@ opts.each do |opt, arg|
 --countlines '-c' Counts the lines of a file
 --grep '-g' Filter data
 --nohighlighter '-t' NO ARGUMENTS ( Turns off syntax hightlighting )
-  
+--search '-1' Text to search for
+--replace '-2' Replacement string
+
 Example:
       
       icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9,10-15 -o outputfile
@@ -81,26 +85,7 @@ Written by Brian Hood
       @outputfile = arg.to_s
       puts "Outputfile: #{@outputfile}"
     when '--skiplines'
-      @skip_lines = Array.new
-      arg.to_s.split(",").each {|n| 
-          @skip_lines << n.to_i
-          # Allow line ranges 
-          min = n.split("-")[0].to_i
-          max = n.split("-")[1].to_i
-          unless n.split("-")[1] == nil 
-            begin
-              if min > max and max != 0
-                return false
-              end
-            rescue
-              puts "Range Error: Minimun value can't be more than Maxiumun Range value"
-              exit
-            end
-            min.upto(max) {|s|
-              @skip_lines << s unless @skip_lines[@skip_lines.size - 1] == s
-            }
-          end
-      }
+      @skip_lines = skip_processor(arg)
     when '--skipblank'
       @skipblank = "SKIP"
     when '--quiet'
@@ -115,8 +100,24 @@ Written by Brian Hood
       @grep = arg.to_s
     when '--nohighlighter'
       @nohighlighter = "OFF"
+    when '--search'
+      @search = arg.to_s
+    when '--replace'
+      @replace = arg.to_s
   end
 end
+
+if instance_variable_defined?("@search")
+  search = @search
+  if instance_variable_defined?("@replace")
+    replace = @replace
+    search_and_replace = true
+  else
+    puts "Replace string required to use search / replace features..."
+    exit
+  end
+end
+
 
 unless instance_variable_defined?("@line_offset")
   lineoffset = 0
@@ -152,19 +153,14 @@ unless File.exist?("#{inputfile}")
   exit
 end
 
-def text_processor(data)
-  unless instance_variable_defined?("@nohighlighter")
-    data = text_highlighter(data)
-    return data
-  else
-    return data
-  end
-end
-
 begin
   File.open(inputfile) {|n|
     n.each_line {|data|
       data_orig = data.clone
+      if search_and_replace == true
+        data_orig.gsub!("#{search}", "#{replace}")
+        data.gsub!("#{search}", "#{replace}")
+      end
       unless lineoffset > increment_offset
         unless linelimit == 0
           unless increment_limit > linelimit

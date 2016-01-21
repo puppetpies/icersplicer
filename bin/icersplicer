@@ -34,7 +34,9 @@ opts = GetoptLong.new(
   [ '--skipblank', '-b', GetoptLong::NO_ARGUMENT ],
   [ '--quiet', '-q', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT],
-  [ '--countlines', '-c', GetoptLong::OPTIONAL_ARGUMENT]
+  [ '--countlines', '-c', GetoptLong::OPTIONAL_ARGUMENT],
+  [ '--grep', '-g', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--nohighlighter', '-t', GetoptLong::NO_ARGUMENT ]
 )
 
 opts.each do |opt, arg|
@@ -53,6 +55,8 @@ opts.each do |opt, arg|
 --quiet '-q' NO ARGUMENTS
 --outputfile '-o' filename
 --countlines '-c' Counts the lines of a file
+--grep '-g' Filter data
+--nohighlighter '-t' NO ARGUMENTS ( Turns off syntax hightlighting )
   
 Example:
       
@@ -89,6 +93,10 @@ Written by Brian Hood
       end
     when '--countlines'
       @countlines = true
+    when '--grep'
+      @grep = arg.to_s
+    when '--nohighlighter'
+      @nohighlighter = "OFF"
   end
 end
 
@@ -126,6 +134,15 @@ unless File.exist?("#{inputfile}")
   exit
 end
 
+def text_processor(data)
+  unless instance_variable_defined?("@nohighlighter")
+    data = text_highlighter(data)
+    return data
+  else
+    return data
+  end
+end
+
 begin
   File.open(inputfile) {|n|
     n.each_line {|data|
@@ -134,17 +151,21 @@ begin
         unless linelimit == 0
           unless increment_limit > linelimit
             unless instance_variable_defined?("@skipblank") and data.strip  == ""
-              print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
-              if instance_variable_defined?("@outputfile")
-                processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+              unless instance_variable_defined?("@grep") and data =~ %r=#{@grep}=
+                print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
+                if instance_variable_defined?("@outputfile")
+                  processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+                end
               end
             end
           end
         else
           unless instance_variable_defined?("@skipblank") and data.strip == ""
-            print_to_screen(linecounter, text_highlighter(data), quietmode) unless skip(linecounter)
-            if instance_variable_defined?("@outputfile")
-              processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+            unless instance_variable_defined?("@grep") and data =~ %r=#{@grep}=
+              print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
+              if instance_variable_defined?("@outputfile")
+                processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+              end
             end
           end
         end

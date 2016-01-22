@@ -12,7 +12,7 @@
 # Why: for processing large datasets quickly.
 ########################################################################
 
-require 'getoptlong'
+require 'getoptlong' 
 require 'walltime'
 require 'pp'
 
@@ -144,6 +144,7 @@ quietmode = false | @quiet_mode
 
 inputfile = @inputfile
 outputfile = @outputfile
+grep = @grep
 
 if @countlines == true
   countlines(inputfile)
@@ -162,26 +163,27 @@ begin
     n.each_line {|data|
       data_orig = data.clone
       if search_and_replace == true
-        data_orig.gsub!("#{search}", "#{replace}")
         data.gsub!("#{search}", "#{replace}")
       end
       unless lineoffset > increment_offset
         unless linelimit == 0
           unless increment_limit > linelimit
-            unless instance_variable_defined?("@skipblank") and data.strip  == ""
-              unless instance_variable_defined?("@grep") and data =~ %r=#{@grep}=
+            unless instance_variable_defined?("@skipblank") and data_orig.strip  == ""
+              if data_orig =~ /#{grep}/ 
                 print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
                 if instance_variable_defined?("@outputfile")
+                  data_orig.gsub!("#{search}", "#{replace}")
                   processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
                 end
               end
             end
           end
         else
-          unless instance_variable_defined?("@skipblank") and data.strip == ""
-            unless instance_variable_defined?("@grep") and data =~ %r=#{@grep}=
+          unless instance_variable_defined?("@skipblank") and data_orig.strip == ""
+             if data_orig =~ /#{grep}/
               print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
               if instance_variable_defined?("@outputfile")
+                data_orig.gsub!("#{search}", "#{replace}")
                 processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
               end
             end
@@ -200,3 +202,4 @@ closefile if instance_variable_defined?("@exp")
 stats(inputfile, outputfile)
 timer.watch('stop')
 timer.print_stats
+puts "\e[0m\ "

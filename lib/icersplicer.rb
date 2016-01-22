@@ -22,6 +22,7 @@ module Icersplicer
   @@nfile = 0
   @@exp = nil
   @@keywordsfile = "keywords.ice"
+  @@debug = false
 
   COLOURS = {"black" => 0,
              "red" => 1, 
@@ -33,14 +34,17 @@ module Icersplicer
              "white" => 7}
                 
   def load_keywords(file)
-    keys = Array.new
+    keys = Hash.new
+    linenum = 0
     unless Dir.exists?("#{Dir.home}/.icersplicer")
       Dir.mkdir("#{Dir.home}/.icersplicer")
     end
     if File.exists?("#{Dir.home}/.icersplicer/#{file}")
       File.open("#{Dir.home}/.icersplicer/#{file}") {|n|
         n.each_line {|l|
-          keys << l.strip unless l.strip == ""
+          keys.update({linenum => "#{l.strip}"}) unless l.strip == ""
+          puts "L: #{l.strip}" if @@debug == true
+          linenum += 1
         }
       }
       return keys
@@ -61,21 +65,25 @@ module Icersplicer
   def text_highlighter(text)
     @keys ||= load_keywords("#{@@keywordsfile}")
     if @keys == false
-      @keys = ["Ln:", "SELECT", "CREATE TABLE", "UPDATE", "DELETE", "INSERT", "FROM", "OFFSET", "GROUP BY", "HAVING", "ORDER BY",
-              "ALTER USER", "ALTER TABLE", "COPY", "INTO", "VALUES", "DELIMITERS", "STDIN", "CREATE USER", "WITH", "USING",
-              "CREATE INDEX", "CONSTRAINT", "ALTER INDEX", "INTEGER", "CHAR", "CLOB", "VARCHAR", "STRING", "DEFAULT", "NULL", "NOT",
-              "RECORDS", "KEY", "PRIMARY", "FOREIGN", "BIGINT", "MERGE", "REMOTE", "DROP TABLE", "SET SCHEMA", "CREATE SCHEMA",
-              "ALTER SCHEMA", "ADD", "TABLE", "CREATE SEQUENCE", "ALTER SEQUENCE"]
+      @keys = {0 => "Ln:", 
+               1 => "SELECT", 
+               2 => "CREATE TABLE", 
+               3 => "UPDATE", 
+               4 => "DELETE", 
+               5 => "INSERT"}
     end
     cpicker = [2,3,4,1,7,5,6] # Just a selection of colours
     @keys.each {|n|
-      if n.split("##")[1] == nil
-        text.gsub!("#{n}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n}\e[0m\ \e[0;32m".strip)
+      if n[1].split("##")[1] == nil
+        text.gsub!("#{n[1]}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n[1]}\e[0m\ \e[0;32m")
       else
-        name = n.split("##")[1].split("=")[1]
+        name = n[1].split("##")[1].split("=")[1]
+        puts "Name: #{name}" if @@debug == true
         cnum = COLOURS[name].to_i
-        nval = n.split("##")[0]
-        text.gsub!("#{nval}", "\e[4;3#{cnum}m#{nval}\e[0m\ \e[0;32m".strip)
+        puts "Colour Number: #{cnum}" if @@debug == true
+        nval = n[1].split("##")[0]
+        puts "Value: #{nval}" if @@debug == true
+        text.gsub!("#{nval}", "\e[4;3#{cnum}m#{nval}\e[0m\ \e[0;32m")
       end
       text.gsub!(" \e[0;32m", "\e[0;32m")
     }
@@ -85,7 +93,7 @@ module Icersplicer
   def countlines(inputfile)
     lines = 0
     unless inputfile == nil
-      if File.exists?(inputfile)
+      if File.exist?(inputfile)
         File.open(inputfile) {|n|
           n.each_line {
             lines += 1
@@ -122,9 +130,11 @@ module Icersplicer
   
   def skip(line)
     begin
-      line_element = @skip_lines.index(line)
-      if line_element != nil
-        skiper = @skip_lines[line_element]
+      if instance_variable_defined?("@skip_lines")
+        line_element = @skip_lines.index(line)
+        if line_element != nil
+          skiper = @skip_lines[line_element]
+        end
       end
     rescue NoMethodError
       return nil

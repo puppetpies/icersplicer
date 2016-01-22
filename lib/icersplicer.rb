@@ -14,7 +14,7 @@ module Icersplicer
   module VERSION #:nodoc:
     MAJOR = 0
     MINOR = 6
-    TINY = 0
+    TINY = 2
     CODENAME = "Icicle World !"
     STRING = [MAJOR, MINOR, TINY].join('.')
   end

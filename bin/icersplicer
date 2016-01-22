@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/ruby -d
 ########################################################################
 #
 # Author: Brian Hood
@@ -34,7 +34,7 @@ opts = GetoptLong.new(
   [ '--inputfile', '-f', GetoptLong::REQUIRED_ARGUMENT],
   [ '--skiplines', '-s', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--skipblank', '-b', GetoptLong::NO_ARGUMENT ],
-  [ '--quiet', '-q', GetoptLong::OPTIONAL_ARGUMENT],
+  [ '--quiet', '-q', GetoptLong::NO_ARGUMENT],
   [ '--outputfile', '-o', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--countlines', '-c', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--grep', '-g', GetoptLong::REQUIRED_ARGUMENT],
@@ -71,7 +71,9 @@ Example:
       TIPS: Create a custom keywords list in your #{Dir.home}/.icersplicer/keywords.ice
       
       For performant exports to an outputfile add -t as Syntax Highlighting is expensive 
-      also add --quiet true to make large datasets go faster / less screen output.     
+      also add --quiet to make large datasets go faster / less screen output.
+      
+      NOTE: Quiet also disables Syntax Highlighting
 
 Written by Brian Hood
       ]
@@ -93,11 +95,8 @@ Written by Brian Hood
     when '--skipblank'
       @skipblank = "SKIP"
     when '--quiet'
-      if arg == "true"
-        @quiet_mode = true
-      else
-        @quiet_mode = false
-      end
+      @quiet_mode = true
+      @nohighlighter = "OFF"
     when '--countlines'
       @countlines = true
     when '--grep'

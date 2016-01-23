@@ -14,7 +14,7 @@ Thats where icersplicer comes in.
 
 It also features fun keyword highlighting randomization and static keyword colours!
 
-Checkout the keywords.ice in examples and copy it in your home foler under the .icersplicer directory
+Checkout the keywords.ice in examples and copy it in your home folder under the .icersplicer directory
 
 ![Icesplicer](https://raw.githubusercontent.com/puppetpies/icersplicer/master/icersplicer.jpg)
 

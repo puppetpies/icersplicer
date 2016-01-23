@@ -22,15 +22,25 @@ Checkout the keywords.ice in examples and copy it in your home folder under the 
 Example usage:
 
 > [brian@orville icersplicer]$ bin/icersplicer -f /home/brian/Downloads/voc_dump.sql  -g '(^\);)'
+
 > Ln: 27: );
+
 > Ln: 8233: );
+
 > Ln: 10596: );
+
 > Ln: 11544: );
+
 > Ln: 15340: );
+
 > Ln: 18167: );
+
 > Ln: 22649: );
+
 > Ln: 26840: );
+
 > Inputfile lines: Filename: /home/brian/Downloads/voc_dump.sql Total Line Count: 29335
+
 > Start: 2016-01-23 17:17:18 +0000 Finish: 2016-01-23 17:17:19 +0000 Total time: 1.05
  
 [brian@orville icersplicer]$ bin/icersplicer -f /home/brian/Downloads/voc_dump.sql  -g 'CREATE TABLE'

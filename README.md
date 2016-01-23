@@ -12,7 +12,11 @@ that they don't do certain things like offsets the ability to skip lines etc..
 
 Thats where icersplicer comes in.
 
-It also features fun keyword highlighting randomization !
+It also features fun keyword highlighting randomization and static keyword colours!
+
+Checkout the keywords.ice in examples and copy it in your home foler under the .icersplicer directory
 
 ![Icesplicer](https://raw.githubusercontent.com/puppetpies/icersplicer/master/icersplicer.jpg)
+
+Have fun !
 

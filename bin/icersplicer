@@ -22,6 +22,16 @@ require File.expand_path(File.join(
 
 include Icersplicer
 
+def reset_screen
+  puts "\e[0m\ "
+end
+
+trap("INT") {
+  puts "Goodbye see you soon!"
+  reset_screen
+  exit
+}
+
 VERSION = Icersplicer::VERSION::STRING
 
 ARGV[0] = "--help" if ARGV[0] == nil
@@ -32,6 +42,7 @@ opts = GetoptLong.new(
   [ '--linelimit', '-n', GetoptLong::REQUIRED_ARGUMENT],
   [ '--head', '-3', GetoptLong::REQUIRED_ARGUMENT],
   [ '--tail', '-4', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--followtail', '-5', GetoptLong::REQUIRED_ARGUMENT],
   [ '--incrementlimit', '-i', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--inputfile', '-f', GetoptLong::REQUIRED_ARGUMENT],
   [ '--skiplines', '-s', GetoptLong::OPTIONAL_ARGUMENT],
@@ -57,6 +68,7 @@ opts.each do |opt, arg|
 --linelimit '-n' INTEGER
 --head '-3' INTEGER
 --tail '-4' INTEGER
+--followtail '-5' INTEGER
 --inputfile '-f' filename
 --skiplines '-s' LINE NUMBERS 3,5,6
 --skipblank '-b' NO ARGUMENTS ( Ommit blank lines )
@@ -92,6 +104,9 @@ Written by Brian Hood
       end
     when /^--linelimit|^--head/
       @line_limit = arg.to_i
+    when '--followtail'
+      @followtail = arg.to_i
+      puts "Tail lines: #{@followtail}"
     when '--incrementlimit'
       @increment_limit = arg.to_i
     when '--inputfile'
@@ -119,6 +134,15 @@ Written by Brian Hood
   end
 end
 
+inputfile = @inputfile
+outputfile = @outputfile
+grep = @grep
+
+if instance_variable_defined?("@followtail")
+  lines = @followtail
+  followtail(inputfile, lines)
+end
+
 if instance_variable_defined?("@search")
   search = @search
   if instance_variable_defined?("@replace")
@@ -129,7 +153,6 @@ if instance_variable_defined?("@search")
     exit
   end
 end
-
 
 unless instance_variable_defined?("@line_offset")
   lineoffset = 0
@@ -151,10 +174,6 @@ else
 end
 linecounter = 0
 quietmode = false | @quiet_mode
-
-inputfile = @inputfile
-outputfile = @outputfile
-grep = @grep
 
 if @countlines == true
   countlines(inputfile)
@@ -208,8 +227,8 @@ begin
 rescue Errno::EPIPE
   puts "Closing session due to broken pipe"
 end
-closefile if instance_variable_defined?("@exp")
+closefile
 stats(inputfile, outputfile)
 timer.watch('stop')
 timer.print_stats
-puts "\e[0m\ "
+reset_screen

@@ -8,6 +8,7 @@
 #   
 #
 ########################################################################
+require 'file-tail'
 
 module Icersplicer
 
@@ -32,7 +33,16 @@ module Icersplicer
              "purple" => 5,
              "cyan" => 6,
              "white" => 7}
-                
+  
+  def followtail(filename, number)
+    File::Tail::Logfile.open(filename) do |log|
+      log.interval = 3
+      log.backward(10)
+      log.backward(number).tail { |line| puts line }
+    end
+    exit
+  end
+
   def load_keywords(file)
     keys = Hash.new
     linenum = 0
@@ -157,8 +167,11 @@ module Icersplicer
   end
 
   def closefile
-    @@exp.close
-    puts "Closing file: #{outputfile}"
+    begin
+      @@exp.close
+      puts "Closing file"
+    rescue NoMethodError
+    end
   end
 
   def processdata(data, outputfile, quietmode)

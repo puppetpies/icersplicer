@@ -102,6 +102,7 @@ module Icersplicer
         puts "Filename: #{inputfile} Total Line Count: #{lines}"
       end
     end
+    return lines
   end
   
   def skip_processor(filter)
@@ -169,8 +170,6 @@ module Icersplicer
   def stats(inputfile, outputfile)
     print "Inputfile lines: "
     countlines(inputfile)
-    #print "Outputfile lines: "
-    #countlines(outputfile)
   end
 
 end

@@ -30,6 +30,8 @@ opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
   [ '--lineoffset', '-l', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--linelimit', '-n', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--head', '-3', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--tail', '-4', GetoptLong::REQUIRED_ARGUMENT],
   [ '--incrementlimit', '-i', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--inputfile', '-f', GetoptLong::REQUIRED_ARGUMENT],
   [ '--skiplines', '-s', GetoptLong::OPTIONAL_ARGUMENT],
@@ -53,6 +55,8 @@ opts.each do |opt, arg|
    show help
 --lineoffset '-l' INTEGER
 --linelimit '-n' INTEGER
+--head '-3' INTEGER
+--tail '-4' INTEGER
 --inputfile '-f' filename
 --skiplines '-s' LINE NUMBERS 3,5,6
 --skipblank '-b' NO ARGUMENTS ( Ommit blank lines )
@@ -79,9 +83,14 @@ Written by Brian Hood
       ]
       puts helper
       exit
-    when '--lineoffset'
-      @line_offset = arg.to_i
-    when '--linelimit'
+    when  /^--lineoffset|^--tail/
+      if opt == "--lineoffset"
+        @line_offset = arg.to_i
+      else
+        count = countlines(@inputfile)
+        @line_offset = count - arg.to_i
+      end
+    when /^--linelimit|^--head/
       @line_limit = arg.to_i
     when '--incrementlimit'
       @increment_limit = arg.to_i

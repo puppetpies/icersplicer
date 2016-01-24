@@ -26,6 +26,10 @@ def reset_screen
   puts "\e[0m\ "
 end
 
+def filterlinestats(filterlines)
+  puts "\nLines Displayed by Filter: #{filterlines}"
+end
+
 trap("INT") {
   puts "Goodbye see you soon!"
   reset_screen
@@ -53,7 +57,8 @@ opts = GetoptLong.new(
   [ '--grep', '-g', GetoptLong::REQUIRED_ARGUMENT],
   [ '--nohighlighter', '-t', GetoptLong::NO_ARGUMENT ],
   [ '--search', '-1', GetoptLong::REQUIRED_ARGUMENT],
-  [ '--replace', '-2', GetoptLong::REQUIRED_ARGUMENT]
+  [ '--replace', '-2', GetoptLong::REQUIRED_ARGUMENT],
+  [ '--nostats', '-6', GetoptLong::NO_ARGUMENT ],
 )
 
 opts.each do |opt, arg|
@@ -79,6 +84,7 @@ opts.each do |opt, arg|
 --nohighlighter '-t' NO ARGUMENTS ( Turns off syntax hightlighting )
 --search '-1' Text to search for
 --replace '-2' Replacement string
+--nostats '-6' Don't process statistics before exit
 
 Example:
       
@@ -131,6 +137,8 @@ Written by Brian Hood
       @search = arg.to_s
     when '--replace'
       @replace = arg.to_s
+    when '--nostats'
+      @nostats = "SKIP"
   end
 end
 
@@ -185,8 +193,11 @@ unless File.exist?("#{inputfile}")
   exit
 end
 
-timer = Stopwatch.new
-timer.watch('start')
+filterlines = 0
+unless instance_variable_defined?("@nostats")
+  timer = Stopwatch.new
+  timer.watch('start')
+end
 begin
   File.open(inputfile) {|n|
     n.each_line {|data|
@@ -198,7 +209,8 @@ begin
         unless linelimit == 0
           unless increment_limit > linelimit
             unless instance_variable_defined?("@skipblank") and data_orig.strip  == ""
-              if data_orig =~ /#{grep}/ 
+              if data_orig =~ /#{grep}/
+                filterlines += 1
                 print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
                 if instance_variable_defined?("@outputfile")
                   data_orig.gsub!("#{search}", "#{replace}")
@@ -210,6 +222,7 @@ begin
         else
           unless instance_variable_defined?("@skipblank") and data_orig.strip == ""
             if data_orig =~ /#{grep}/
+              filterlines += 1
               print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
               if instance_variable_defined?("@outputfile")
                 data_orig.gsub!("#{search}", "#{replace}")
@@ -228,7 +241,10 @@ rescue Errno::EPIPE
   puts "Closing session due to broken pipe"
 end
 closefile
-stats(inputfile, outputfile)
-timer.watch('stop')
-timer.print_stats
+unless instance_variable_defined?("@nostats")
+  filterlinestats(filterlines)
+  stats(inputfile, outputfile)
+  timer.watch('stop')
+  timer.print_stats
+end
 reset_screen

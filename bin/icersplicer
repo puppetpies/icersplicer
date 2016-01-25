@@ -22,14 +22,6 @@ require File.expand_path(File.join(
 
 include Icersplicer
 
-def reset_screen
-  puts "\e[0m\ "
-end
-
-def filterlinestats(filterlines)
-  puts "\nLines Displayed by Filter: #{filterlines}"
-end
-
 trap("INT") {
   puts "Goodbye see you soon!"
   reset_screen

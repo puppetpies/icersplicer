@@ -81,8 +81,9 @@ module Icersplicer
   end
 
   def text_highlighter(text)
-    @keys ||= load_keywords("#{@@keywordsfile}")
-    if @keys == false
+    begin
+      @keys ||= load_keywords("#{@@keywordsfile}")
+    rescue FalseClass    
       @keys = {0 => "Ln:", 
                1 => "SELECT", 
                2 => "CREATE TABLE", 
@@ -131,14 +132,10 @@ module Icersplicer
         # Allow line ranges 
         min = n.split("-")[0].to_i
         max = n.split("-")[1].to_i
-        unless n.split("-")[1] == nil 
-          begin
-            if min > max and max != 0
-              return false
-            end
-          rescue
-            puts "Range Error: Minimun value can't be more than Maxiumun Range value"
-            exit
+        puts "Min: #{min} Max: #{max}" if @debug == true
+        unless n.split("-")[1] == nil
+          if min > max
+            raise RangeError, "Range Error: Minimun value can't be more than Maxiumun Range value"              
           end
           min.upto(max) {|s|
             skip_lines.update({skipcounter => s}) unless skip_lines[skip_lines.size - 1] == s
@@ -169,8 +166,12 @@ module Icersplicer
   end
 
   def openfile(outputfile)
-    puts "Openfile: #{outputfile}"
-    @@exp = File.open("#{outputfile}", 'w')
+    begin
+      puts "Openfile: #{outputfile}"
+     @@exp = File.open("#{outputfile}", 'w')
+    rescue Errno::EACCES
+      puts "Can't create file please check file / directory permissions"
+    end
   end
 
   def writefile(data)

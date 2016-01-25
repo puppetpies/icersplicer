@@ -149,7 +149,7 @@ if instance_variable_defined?("@search")
     replace = @replace
     search_and_replace = true
   else
-    puts "Replace string required to use search / replace features..."
+    raise ArgumentError, "Replace string required to use search / replace features..."
     exit
   end
 end
@@ -181,7 +181,7 @@ if @countlines == true
 end
 
 unless File.exist?("#{inputfile}")
-  puts "Input filename / location doesn't exist... ?"
+  raise ArgumentError, "Input filename / location doesn't exist... ?"
   exit
 end
 
@@ -229,8 +229,8 @@ begin
       linecounter += 1
     }
   }
-rescue Errno::EPIPE
-  puts "Closing session due to broken pipe"
+rescue Errno::EPIPE, IOError
+  raise IOError, "Closing session due to broken pipe"
 end
 closefile
 unless instance_variable_defined?("@nostats")

@@ -95,12 +95,9 @@ module Icersplicer
       if n[1].split("##")[1] == nil
         text.gsub!("#{n[1]}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n[1]}\e[0m\ \e[0;32m")
       else
-        name = n[1].split("##")[1].split("=")[1]
-        puts "Name: #{name}" if @@debug == true
-        cnum = COLOURS[name].to_i
-        puts "Colour Number: #{cnum}" if @@debug == true
-        nval = n[1].split("##")[0]
-        puts "Value: #{nval}" if @@debug == true
+        name = n[1].split("##")[1].split("=")[1]; puts "Name: #{name}" if @@debug == true
+        cnum = COLOURS[name].to_i; puts "Colour Number: #{cnum}" if @@debug == true
+        nval = n[1].split("##")[0]; puts "Value: #{nval}" if @@debug == true
         text.gsub!("#{nval}", "\e[4;3#{cnum}m#{nval}\e[0m\ \e[0;32m")
       end
       text.gsub!(" \e[0;32m", "\e[0;32m")

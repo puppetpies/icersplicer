@@ -33,7 +33,15 @@ module Icersplicer
              "purple" => 5,
              "cyan" => 6,
              "white" => 7}
+
+  def reset_screen
+    puts "\e[0m\ "
+  end
   
+  def filterlinestats(filterlines)
+    puts "\nLines Displayed by Filter: #{filterlines}"
+  end
+
   def followtail(filename, number)
     File::Tail::Logfile.open(filename) do |log|
       log.interval = 3

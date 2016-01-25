@@ -81,9 +81,8 @@ module Icersplicer
   end
 
   def text_highlighter(text)
-    begin
-      @keys ||= load_keywords("#{@@keywordsfile}")
-    rescue FalseClass    
+    @keys ||= load_keywords("#{@@keywordsfile}")
+    unless @keys.class == Hash
       @keys = {0 => "Ln:", 
                1 => "SELECT", 
                2 => "CREATE TABLE", 

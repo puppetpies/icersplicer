@@ -124,9 +124,10 @@ module Icersplicer
   end
   
   def skip_processor(filter)
-    skip_lines = Array.new
+    skip_lines = Hash.new
+    skipcounter = 0
     filter.to_s.split(",").each {|n| 
-        skip_lines << n.to_i
+        skip_lines.update({skipcounter => n.to_i}) 
         # Allow line ranges 
         min = n.split("-")[0].to_i
         max = n.split("-")[1].to_i
@@ -140,9 +141,11 @@ module Icersplicer
             exit
           end
           min.upto(max) {|s|
-            skip_lines << s unless skip_lines[skip_lines.size - 1] == s
+            skip_lines.update({skipcounter => s}) unless skip_lines[skip_lines.size - 1] == s
+            skipcounter += 1
           }
         end
+      skipcounter += 1
     }
     return skip_lines
   end
@@ -150,7 +153,7 @@ module Icersplicer
   def skip(line)
     begin
       if instance_variable_defined?("@skip_lines")
-        line_element = @skip_lines.index(line)
+        line_element = @skip_lines.key(line)
         if line_element != nil
           skiper = @skip_lines[line_element]
         end

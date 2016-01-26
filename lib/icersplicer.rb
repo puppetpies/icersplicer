@@ -166,7 +166,7 @@ module Icersplicer
       puts "Openfile: #{outputfile}"
      @@exp = File.open("#{outputfile}", 'w')
     rescue Errno::EACCES
-      puts "Can't create file please check file / directory permissions"
+      raise IOError, "Can't create file please check file / directory permissions"
     end
   end
 

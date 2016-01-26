@@ -5,7 +5,7 @@ VERSION = Icersplicer::VERSION::STRING
 Gem::Specification.new do |s|
   s.name        = 'icersplicer'
   s.version     = VERSION
-  s.date        = '2016-01-25'
+  s.date        = '2016-01-26'
   s.summary     = "Icersplicer"
   s.description = "Text file manipulation similar to UNIX tools like cat / head / tail"
   s.authors     = ["Brian Hood"]

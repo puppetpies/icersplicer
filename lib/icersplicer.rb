@@ -15,8 +15,8 @@ module Icersplicer
   module VERSION #:nodoc:
     MAJOR = 0
     MINOR = 8
-    TINY = 0
-    CODENAME = "Ice Age !"
+    TINY = 4
+    CODENAME = "Ice Seal !"
     STRING = [MAJOR, MINOR, TINY].join('.')
   end
   

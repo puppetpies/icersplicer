@@ -29,17 +29,16 @@ module Icersplicer
     attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug
     
     COLOURS = {"black" => 0,
-              "red" => 1, 
-              "green" => 2, 
-              "yellow" => 3, 
-              "blue" => 4,
-              "purple" => 5,
-              "cyan" => 6,
-              "white" => 7}
+               "red" => 1, 
+               "green" => 2, 
+               "yellow" => 3, 
+               "blue" => 4,
+               "purple" => 5,
+               "cyan" => 6,
+               "white" => 7}
 
     def initialize
       @fileopen = 0
-      @exp = nil
       @keywordsfile = "keywords.ice"
       @debug = 0
     end
@@ -173,7 +172,7 @@ module Icersplicer
 
     def openfile(outputfile)
       begin
-        puts "Openfile: #{outputfile}" if @debug == true
+        puts "Openfile: #{outputfile}" if @debug >= 1
         @export = File.open("#{outputfile}", 'w')
       rescue Errno::EACCES
         raise IOError, "Can't create file please check file / directory permissions"

@@ -25,16 +25,18 @@ include Icersplicer
 
 trap("INT") {
   puts "Goodbye see you soon!"
-  reset_screen
+  ice.reset_screen
   exit
 }
 
 VERSION = Icersplicer::VERSION::STRING
+ice = FileProcessor.new
 
 ARGV[0] = "--help" if ARGV[0] == nil
 
 opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+  [ '--keywordsfile', '-k', GetoptLong::REQUIRED_ARGUMENT],
   [ '--lineoffset', '-l', GetoptLong::OPTIONAL_ARGUMENT],
   [ '--linelimit', '-n', GetoptLong::REQUIRED_ARGUMENT],
   [ '--head', '-3', GetoptLong::REQUIRED_ARGUMENT],
@@ -52,6 +54,7 @@ opts = GetoptLong.new(
   [ '--search', '-1', GetoptLong::REQUIRED_ARGUMENT],
   [ '--replace', '-2', GetoptLong::REQUIRED_ARGUMENT],
   [ '--nostats', '-6', GetoptLong::NO_ARGUMENT ],
+  [ '--debug', '-d', GetoptLong::REQUIRED_ARGUMENT ]
 )
 
 opts.each do |opt, arg|
@@ -61,7 +64,9 @@ opts.each do |opt, arg|
       helper << "\e[1;34m============================\e[0m\ \n"
       helper << %Q[
 -h, --help '-h':
-   show help
+   show help, )
+--keywordsfile '-k' STRING ( Syntax Highlighting Keywords file see examples )
+  Full path not required just keywords-ruby.ice just place it in .icersplicer
 --lineoffset '-l' INTEGER
 --linelimit '-n' INTEGER
 --head '-3' INTEGER
@@ -74,10 +79,11 @@ opts.each do |opt, arg|
 --outputfile '-o' filename
 --countlines '-c' Counts the lines of a file
 --grep '-g' Filter data
---nohighlighter '-t' NO ARGUMENTS ( Turns off syntax hightlighting )
+--nohighlighter '-t' NO ARGUMENTS ( Turns off Syntax Hightlighting )
 --search '-1' Text to search for
 --replace '-2' Replacement string
 --nostats '-6' Don't process statistics before exit
+--debug '-d' Verbose debug for hacking on this project
 
 Example:
       
@@ -94,11 +100,13 @@ Written by Brian Hood
       ]
       puts helper
       exit
+    when '--keywordsfile'
+      ice.keywordsfile = arg.to_s
     when  /^--lineoffset|^--tail/
       if opt == "--lineoffset"
         @line_offset = arg.to_i
       else
-        count = countlines(@inputfile)
+        count = ice.countlines(@inputfile)
         @line_offset = count - arg.to_i
       end
     when /^--linelimit|^--head/
@@ -114,7 +122,7 @@ Written by Brian Hood
       @outputfile = arg.to_s
       puts "Outputfile: #{@outputfile}"
     when '--skiplines'
-      @skip_lines = skip_processor(arg)
+      ice.skip_lines = ice.skip_processor(arg)
     when '--skipblank'
       @skipblank = "SKIP"
     when '--quiet'
@@ -125,13 +133,15 @@ Written by Brian Hood
     when '--grep'
       @grep = arg.to_s
     when '--nohighlighter'
-      @nohighlighter = "OFF"
+      ice.nohighlighter = "OFF"
     when '--search'
       @search = arg.to_s
     when '--replace'
       @replace = arg.to_s
     when '--nostats'
       @nostats = "SKIP"
+    when '--debug'
+      ice.debug = arg.to_i
   end
 end
 
@@ -141,7 +151,7 @@ grep = @grep
 
 if instance_variable_defined?("@followtail")
   lines = @followtail
-  followtail(inputfile, lines)
+  ice.followtail(inputfile, lines)
 end
 
 if instance_variable_defined?("@search")
@@ -177,7 +187,7 @@ linecounter = 0
 quietmode = false | @quiet_mode
 
 if @countlines == true
-  countlines(inputfile)
+  ice.countlines(inputfile)
   exit
 end
 
@@ -204,10 +214,10 @@ begin
             unless instance_variable_defined?("@skipblank") and data_orig.strip  == ""
               if data_orig =~ /#{grep}/
                 filterlines += 1
-                print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
+                ice.print_to_screen(linecounter, ice.text_processor(data), quietmode) unless ice.skip(linecounter)
                 if instance_variable_defined?("@outputfile")
                   data_orig.gsub!("#{search}", "#{replace}")
-                  processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+                  ice.processdata(data_orig, outputfile, quietmode) unless ice.skip(linecounter)
                 end
               end
             end
@@ -216,10 +226,10 @@ begin
           unless instance_variable_defined?("@skipblank") and data_orig.strip == ""
             if data_orig =~ /#{grep}/
               filterlines += 1
-              print_to_screen(linecounter, text_processor(data), quietmode) unless skip(linecounter)
+              ice.print_to_screen(linecounter, ice.text_processor(data), quietmode) unless ice.skip(linecounter)
               if instance_variable_defined?("@outputfile")
                 data_orig.gsub!("#{search}", "#{replace}")
-                processdata(data_orig, outputfile, quietmode) unless skip(linecounter)
+                ice.processdata(data_orig, outputfile, quietmode) unless ice.skip(linecounter)
               end
             end
           end
@@ -233,11 +243,11 @@ begin
 rescue Errno::EPIPE, IOError
   raise IOError, "Closing session due to broken pipe"
 end
-closefile
+ice.closefile
 unless instance_variable_defined?("@nostats")
-  filterlinestats(filterlines)
-  stats(inputfile, outputfile)
+  ice.filterlinestats(filterlines)
+  ice.stats(inputfile, outputfile)
   timer.watch('stop')
   timer.print_stats
 end
-reset_screen
+ice.reset_screen

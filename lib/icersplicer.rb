@@ -26,7 +26,7 @@ module Icersplicer
 
   class FileProcessor
   
-    attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug
+    attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug, :nolinenumbers
     
     COLOURS = {"black" => 0,
                "red" => 1, 
@@ -41,6 +41,7 @@ module Icersplicer
       @fileopen = 0
       @keywordsfile = "keywords.ice"
       @debug = 0
+      @nolinenumbers = false
     end
     
     def reset_screen
@@ -167,7 +168,10 @@ module Icersplicer
     end
 
     def print_to_screen(linenum, text, quiet)
-      puts "\e[1;33mLn: #{linenum}:\e[0m\ #{text}" unless quiet == true
+      unless @nolinenumbers == true
+        print "\e[1;33mLn: #{linenum}:\e[0m\ "
+      end
+      print "#{text}" unless quiet == true
     end
 
     def openfile(outputfile)

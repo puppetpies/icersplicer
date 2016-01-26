@@ -54,7 +54,8 @@ opts = GetoptLong.new(
   [ '--search', '-1', GetoptLong::REQUIRED_ARGUMENT],
   [ '--replace', '-2', GetoptLong::REQUIRED_ARGUMENT],
   [ '--nostats', '-6', GetoptLong::NO_ARGUMENT ],
-  [ '--debug', '-d', GetoptLong::REQUIRED_ARGUMENT ]
+  [ '--debug', '-d', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--nolines', '-7', GetoptLong::NO_ARGUMENT ]
 )
 
 opts.each do |opt, arg|
@@ -84,6 +85,7 @@ opts.each do |opt, arg|
 --replace '-2' Replacement string
 --nostats '-6' Don't process statistics before exit
 --debug '-d' Verbose debug for hacking on this project
+--nolines '-7' No Line numbers
 
 Example:
       
@@ -142,6 +144,8 @@ Written by Brian Hood
       @nostats = "SKIP"
     when '--debug'
       ice.debug = arg.to_i
+    when '--nolines'
+      ice.nolinenumbers = true
   end
 end
 

@@ -64,7 +64,7 @@ module Icersplicer
     def load_keywords(file)
       keys = Hash.new
       linenum = 0
-      unless Dir.exists?("#{Dir.home}/.icersplicer")
+      unless Dir.exist?("#{Dir.home}/.icersplicer")
         Dir.mkdir("#{Dir.home}/.icersplicer")
       end
       if File.exists?("#{Dir.home}/.icersplicer/#{file}")

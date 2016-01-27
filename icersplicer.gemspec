@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = "Text file manipulation similar to UNIX tools like cat / head / tail"
   s.authors     = ["Brian Hood"]
   s.email       = 'brianh6854@googlemail.com'
-  s.files       = ["bin/icersplicer", "lib/icersplicer.rb", "examples/keywords.ice", "examples/files/example_data.sql", "examples/files/voc_dump.sql"]
+  s.files       = ["bin/icersplicer", "lib/icersplicer.rb", "lib/version.rb", "examples/keywords.ice", "examples/files/example_data.sql", "examples/files/voc_dump.sql"]
   s.executables = ["icersplicer"]
   s.homepage    =
     'https://github.com/puppetpies/icersplicer'

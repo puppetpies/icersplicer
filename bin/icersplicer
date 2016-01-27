@@ -20,7 +20,10 @@ require 'pp'
 require File.expand_path(File.join(
           File.dirname(__FILE__),
           "../lib/icersplicer.rb"))
-
+require File.expand_path(File.join(
+          File.dirname(__FILE__),
+          "../lib/version.rb"))
+          
 include Icersplicer
 
 trap("INT") {

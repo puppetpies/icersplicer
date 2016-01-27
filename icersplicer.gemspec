@@ -1,4 +1,5 @@
 require './lib/icersplicer.rb'
+require './lib/version.rb'
 
 VERSION = Icersplicer::VERSION::STRING
 

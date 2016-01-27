@@ -12,18 +12,6 @@ require 'file-tail'
 
 module Icersplicer
 
-  module VERSION #:nodoc:
-    MAJOR = 0
-    MINOR = 9
-    TINY = 2
-    CODENAME = "Ice Wolf!"
-    STRING = [MAJOR, MINOR, TINY].join('.')
-  end
-
-end
-
-module Icersplicer
-
   class FileProcessor
   
     attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug, :nolinenumbers

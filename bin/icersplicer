@@ -58,7 +58,8 @@ opts = GetoptLong.new(
   [ '--replace', '-2', GetoptLong::REQUIRED_ARGUMENT],
   [ '--nostats', '-6', GetoptLong::NO_ARGUMENT ],
   [ '--debug', '-d', GetoptLong::REQUIRED_ARGUMENT ],
-  [ '--nolines', '-7', GetoptLong::NO_ARGUMENT ]
+  [ '--nolines', '-7', GetoptLong::NO_ARGUMENT ],
+  [ '--striplines', '-8', GetoptLong::NO_ARGUMENT ]
 )
 
 opts.each do |opt, arg|
@@ -89,6 +90,7 @@ opts.each do |opt, arg|
 --nostats '-6' Don't process statistics before exit
 --debug '-d' Verbose debug for hacking on this project
 --nolines '-7' No Line numbers
+--striplines '-8' Strip the whitespace from lines start / end of lines
 
 Example:
       
@@ -132,7 +134,7 @@ Written by Brian Hood
       @skipblank = "SKIP"
     when '--quiet'
       @quiet_mode = true
-      @nohighlighter = "OFF"
+      ice.nohighlighter = "OFF"
     when '--countlines'
       @countlines = true
     when '--grep'
@@ -149,6 +151,9 @@ Written by Brian Hood
       ice.debug = arg.to_i
     when '--nolines'
       ice.nolinenumbers = true
+    when '--striplines'
+      ice.nohighlighter = "OFF"
+      ice.striplines = true
   end
 end
 

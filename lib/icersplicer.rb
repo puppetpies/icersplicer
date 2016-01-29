@@ -71,7 +71,6 @@ module Icersplicer
 
     def text_processor(data)
       unless @nohighlighter == "OFF"
-        data.strip! unless @striplines == false
         data = text_highlighter(data)
         return data
       else

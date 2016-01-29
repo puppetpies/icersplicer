@@ -6,7 +6,7 @@ VERSION = Icersplicer::VERSION::STRING
 Gem::Specification.new do |s|
   s.name        = 'icersplicer'
   s.version     = VERSION
-  s.date        = '2016-01-27'
+  s.date        = '2016-01-29'
   s.summary     = "Icersplicer"
   s.description = "Text file manipulation similar to UNIX tools like cat / head / tail"
   s.authors     = ["Brian Hood"]
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.executables = ["icersplicer"]
   s.homepage    =
     'https://github.com/puppetpies/icersplicer'
-  s.license       = 'GPLv2'
+  s.license       = 'BSD'
   
   s.add_runtime_dependency "walltime", "~> 0.0.5"
   s.add_runtime_dependency "file-tail", "~> 1.1.0"

@@ -14,7 +14,7 @@ module Icersplicer
 
   class FileProcessor
   
-    attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug, :nolinenumbers, :striplines
+    attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug, :nolinenumbers
     
     COLOURS = {"black" => 0,
                "red" => 1, 
@@ -30,7 +30,6 @@ module Icersplicer
       @keywordsfile = "keywords.ice"
       @debug = 0
       @nolinenumbers = false
-      @striplines = false
     end
     
     def reset_screen

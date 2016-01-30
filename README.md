@@ -56,6 +56,8 @@ Thats where icersplicer comes in.
 
 It also features fun keyword highlighting randomization and static keyword colours!
 
+![Icersplicer SQL](https://raw.githubusercontent.com/puppetpies/icersplicer/master/icersplicer-sql.jpg)
+
 Checkout the keywords.ice in examples and copy it in your home folder under the .icersplicer directory
 
 ![Icesplicer](https://raw.githubusercontent.com/puppetpies/icersplicer/master/icersplicer.jpg)

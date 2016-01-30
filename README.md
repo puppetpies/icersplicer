@@ -42,9 +42,7 @@ Example:
       NOTE: Quiet also disables Syntax Highlighting
 
 Written by Brian Hood
-
----
-
+````
 
 
 ![Icersplicer Nova](https://raw.githubusercontent.com/puppetpies/icersplicer/master/Icersplicer-nova.png)

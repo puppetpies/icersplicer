@@ -43,6 +43,8 @@ Example:
 
 Written by Brian Hood
 
+-
+
 ![Icersplicer Nova](https://raw.githubusercontent.com/puppetpies/icersplicer/master/Icersplicer-nova.png)
 
 Text file manipulation with the Ruby progamming language.

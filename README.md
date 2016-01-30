@@ -3,6 +3,46 @@ Icersplicer
 
 [![Gem Version](https://badge.fury.io/rb/icersplicer.svg)](https://badge.fury.io/rb/icersplicer)
 
+~~~~~
+Welcome to Icersplicer 1.0.0 
+============================ 
+
+-h, --help '-h':
+   show help, )
+--keywordsfile '-k' STRING ( Syntax Highlighting Keywords file see examples )
+  Full path not required just keywords-ruby.ice just place it in .icersplicer
+--lineoffset '-l' INTEGER
+--linelimit '-n' INTEGER
+--head '-3' INTEGER
+--tail '-4' INTEGER
+--followtail '-5' INTEGER
+--inputfile '-f' filename(s) / Comma separated
+--skiplines '-s' LINE NUMBERS 3,5,6
+--skipblank '-b' NO ARGUMENTS ( Ommit blank lines )
+--quiet '-q' NO ARGUMENTS
+--outputfile '-o' filename
+--countlines '-c' Counts the lines of a file
+--grep '-g' Filter data
+--nohighlighter '-t' NO ARGUMENTS ( Turns off Syntax Hightlighting )
+--search '-1' Text to search for
+--replace '-2' Replacement string
+--nostats '-6' Don't process statistics before exit
+--debug '-d' Verbose debug for hacking on this project
+--nolines '-7' No Line numbers
+
+Example:
+      
+      icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9,10-15 -o outputfile
+      
+      TIPS: Create a custom keywords list in your /home/brian/.icersplicer/keywords.ice
+      
+      For performant exports to an outputfile add -t as Syntax Highlighting is expensive 
+      also add --quiet to make large datasets go faster / less screen output.
+      
+      NOTE: Quiet also disables Syntax Highlighting
+
+Written by Brian Hood
+
 ![Icersplicer Nova](https://raw.githubusercontent.com/puppetpies/icersplicer/master/Icersplicer-nova.png)
 
 Text file manipulation with the Ruby progamming language.

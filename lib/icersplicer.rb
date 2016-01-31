@@ -10,13 +10,12 @@
 ########################################################################
 require 'file-tail'
 
+
 module Icersplicer
 
   class FileProcessor
   
     attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug, :nolinenumbers
-    
-    include GlobUtils
     
     COLOURS = {"black" => 0,
                "red" => 1, 

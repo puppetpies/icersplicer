@@ -36,6 +36,14 @@ files =  buildfilelist(filenames)
     end
   end
 
+  def joinfilenames(rollfiles)
+    filenames = String.new
+    rollfiles.each {|n|
+      filenames << "#{n[1]},"
+    }
+    filenames.gsub!(%r=,$=, "")
+  end
+  
   def buildfilelist(inputfile)
     rollfiles = Hash.new
     rollcounter = 0

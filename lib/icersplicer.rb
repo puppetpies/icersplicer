@@ -81,9 +81,9 @@ module Icersplicer
     end
 
     def text_highlighter(text)
-      @keys ||= load_keywords("#{@keywordsfile}")
-      unless @keys.class == Hash
-        @keys = {0 => "Ln:", 
+      keys ||= load_keywords("#{@keywordsfile}")
+      unless keys.class == Hash
+        keys = {0 => "Ln:", 
                  1 => "SELECT", 
                  2 => "CREATE TABLE", 
                  3 => "UPDATE", 
@@ -91,7 +91,7 @@ module Icersplicer
                  5 => "INSERT"}
       end
       cpicker = [2,3,4,1,7,5,6] # Just a selection of colours
-      @keys.each {|n|
+      keys.each {|n|
         if n[1].split("##")[1] == nil
           text.gsub!("#{n[1]}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n[1]}\e[0m\ \e[0;32m")
         else
@@ -124,20 +124,20 @@ module Icersplicer
       skip_lines = Hash.new
       skipcounter = 0
       filter.to_s.split(",").each {|n| 
-          skip_lines.update({skipcounter => n.to_i}) 
-          # Allow line ranges 
-          min = n.split("-")[0].to_i
-          max = n.split("-")[1].to_i
-          puts "Min: #{min} Max: #{max}" if @debug >= 2
-          unless n.split("-")[1] == nil
-            if min > max
-              raise RangeError, "Range Error: Minimun value can't be more than Maxiumun Range value"              
-            end
-            min.upto(max) {|s|
-              skip_lines.update({skipcounter => s}) unless skip_lines[skip_lines.size - 1] == s
-              skipcounter += 1
-            }
+        skip_lines.update({skipcounter => n.to_i}) 
+        # Allow line ranges 
+        min = n.split("-")[0].to_i
+        max = n.split("-")[1].to_i
+        puts "Min: #{min} Max: #{max}" if @debug >= 2
+        unless n.split("-")[1] == nil
+          if min > max
+            raise RangeError, "Range Error: Minimun value can't be more than Maxiumun Range value"              
           end
+          min.upto(max) {|s|
+            skip_lines.update({skipcounter => s}) unless skip_lines[skip_lines.size - 1] == s
+            skipcounter += 1
+          }
+        end
         skipcounter += 1
       }
       return skip_lines

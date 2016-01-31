@@ -27,6 +27,7 @@ require File.expand_path(File.join(
           File.dirname(__FILE__),
           "../lib/version.rb"))
           
+include GlobUtils
 include Icersplicer
 
 trap("INT") {
@@ -202,9 +203,11 @@ if @countlines == true
 end
 
 inputfile.split(",").each {|f|
-  unless File.exist?("#{f}")
-    raise ArgumentError, "Input filename #{f} / location doesn't exist... ?"
-    exit
+  unless f =~ FILE_EXT_REGEXP
+    unless File.exist?("#{f}")
+      raise ArgumentError, "Input filename #{f} / location doesn't exist... ?"
+      exit
+    end
   end
 }
 
@@ -214,7 +217,13 @@ unless instance_variable_defined?("@nostats")
   timer.watch('start')
 end
 begin
-  inputfile.split(",").each {|f|
+  # Regular file / glob mask processor
+  filenames = joinfilenames(buildfilelist(inputfile))
+  # Iterator for file / file list
+  filenames.split(",").each {|f|
+    linecounter = 0
+    ice.reset_screen
+    puts "> Filename: #{f} <"
     File.open(f) {|n|
       n.each_line {|data|
         data_orig = data.clone

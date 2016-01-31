@@ -13,9 +13,10 @@ files =  buildfilelist(filenames)
 
   FILE_EXT_REGEXP = /\/*.([a-z]|[A-Z])+$/
   FILE_WILDCARD_REGEXP = /\*.([a-z]|[A-Z])+$/
+  @@debug = 0
 
   def glob(f)
-    puts "String end: #{f[f.size - 1]}"
+    puts "String end: #{f[f.size - 1]}" if @@debug == 1
     unless f[f.size - 1] == "*"
       files = Hash.new
       globcounter = 0
@@ -48,13 +49,13 @@ files =  buildfilelist(filenames)
     rollfiles = Hash.new
     rollcounter = 0
     inputfile.split(",").each {|f|
-      puts "Filename: #{f}"
+      puts "Filename: #{f}" if @@debug == 1
       unless f =~ FILE_WILDCARD_REGEXP
         rollfiles.update({rollcounter => f})
         rollcounter += 1
-        puts "Regular File"
+        puts "Regular File" if @@debug == 1
       else
-        puts "Glob File Mask"
+        puts "Glob File Mask" if @@debug == 1
         g = glob(f)
         g.each {|n|
           rollfiles.update({rollcounter => n[1]})

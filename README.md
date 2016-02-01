@@ -4,7 +4,7 @@ Icersplicer
 [![Gem Version](https://badge.fury.io/rb/icersplicer.svg)](https://badge.fury.io/rb/icersplicer)
 
 ~~~~~
-Welcome to Icersplicer 1.0.0 
+Welcome to Icersplicer 1.0.6 
 ============================ 
 
 -h, --help '-h':
@@ -30,6 +30,21 @@ Welcome to Icersplicer 1.0.0
 --debug '-d' Verbose debug for hacking on this project
 --nolines '-7' No Line numbers
 
+Features:
+
+  Syntax highlighting / On / Off
+  Head /Tail functionality
+  Tail follow like tail -f
+  Support for multiple input for files / wildcards
+  Ability to Skip lines and line ranges and blank lines
+  Quiet mode for exporting large files
+  Countlines in a file
+  Grep functionality
+  Search & Replace in a file
+  Turn off line numbers
+  Debugging mode
+  Turn off line numbers
+  
 Example:
       
       icersplicer -f inputfile --lineoffset 0 --linelimit 10 -s 3,6,9,10-15 -o outputfile

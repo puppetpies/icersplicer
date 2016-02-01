@@ -157,7 +157,7 @@ module Icersplicer
     end
 
     def print_to_screen(linenum, text, quiet)
-      unless @nolinenumbers == true
+      unless @nolinenumbers == true or quiet == true
         print "\e[1;33mLn: #{linenum}:\e[0m\ "
       end
       print "#{text}" unless quiet == true

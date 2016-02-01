@@ -278,8 +278,8 @@ begin
           }
         }
       }
-  rescue
-    raise NoMethodError, "Please specify a valid filename or wildcard file extension"
+  rescue NoMethodError
+    raise LoadError, "Please specify a valid filename or wildcard file extension"
   end
 rescue Errno::EPIPE, IOError
   raise IOError, "Closing session due to broken pipe"

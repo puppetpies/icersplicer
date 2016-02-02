@@ -95,18 +95,18 @@ opts.each do |opt, arg|
 
 Features:
 
-  Syntax highlighting / On / Off
-  Head /Tail functionality
-  Tail follow like tail -f
-  Support for multiple input for files / wildcards
-  Ability to Skip lines and line ranges and blank lines
-  Quiet mode for exporting large files
-  Countlines in a file
-  Grep functionality
-  Search & Replace in a file
-  Turn off line numbers
-  Debugging mode
-  Turn off line numbers
+      Syntax highlighting / On / Off
+      Head /Tail functionality
+      Tail follow like tail -f
+      Support for multiple input for files / wildcards
+      Ability to Skip lines and line ranges and blank lines
+      Quiet mode for exporting large files
+      Countlines in a file
+      Grep functionality
+      Search & Replace in a file
+      Turn off line numbers
+      Debugging mode
+      Turn off line numbers
   
 Example:
       

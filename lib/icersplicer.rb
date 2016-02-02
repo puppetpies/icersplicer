@@ -83,11 +83,11 @@ module Icersplicer
       keys ||= load_keywords("#{@keywordsfile}")
       unless keys.class == Hash
         keys = {0 => "Ln:", 
-                 1 => "SELECT", 
-                 2 => "CREATE TABLE", 
-                 3 => "UPDATE", 
-                 4 => "DELETE", 
-                 5 => "INSERT"}
+                1 => "SELECT", 
+                2 => "CREATE TABLE", 
+                3 => "UPDATE", 
+                4 => "DELETE", 
+                5 => "INSERT"}
       end
       cpicker = [2,3,4,1,7,5,6] # Just a selection of colours
       keys.each {|n|

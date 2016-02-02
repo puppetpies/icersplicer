@@ -30,6 +30,13 @@ end
 
 # Override standard release task
 require 'git'
+
+task :stage do
+  remote = 'origin'
+  git = Git.open(".")
+  git.push(remote, 'stage', true)
+end
+
 Rake::Task["release"].clear
 task :release do
   version = "#{VERSION}"

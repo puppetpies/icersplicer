@@ -32,6 +32,7 @@ end
 require 'git'
 
 task :stage do
+  version = "#{VERSION}"
   remote = 'origin'
   git = Git.open(".")
   git.push(remote, 'stage', true)

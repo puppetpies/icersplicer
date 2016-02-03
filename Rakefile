@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   
   s.add_runtime_dependency "walltime", "~> 0.0.5"
   s.add_runtime_dependency "file-tail", "~> 1.1.0"
+  s.add_runtime_dependency "rainbow", "~> 2.1.0"
 end
 
 require 'rubygems/tasks'

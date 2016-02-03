@@ -6,7 +6,7 @@ VERSION = Icersplicer::VERSION::STRING
 Gem::Specification.new do |s|
   s.name        = 'icersplicer'
   s.version     = VERSION
-  s.date        = '2016-01-31'
+  s.date        = '2016-02-03'
   s.summary     = "Icersplicer"
   s.description = "Text file manipulation similar to UNIX tools like cat / head / tail"
   s.authors     = ["Brian Hood"]
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   
   s.add_runtime_dependency "walltime", "~> 0.0.5"
   s.add_runtime_dependency "file-tail", "~> 1.1.0"
+  s.add_runtime_dependency "rainbow", "~> 2.1.0"
 end
 
 require 'rubygems/tasks'
@@ -32,6 +33,7 @@ end
 require 'git'
 
 task :stage do
+  version = "#{VERSION}"
   remote = 'origin'
   git = Git.open(".")
   git.push(remote, 'stage', true)

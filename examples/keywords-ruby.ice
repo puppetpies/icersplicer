@@ -20,12 +20,12 @@ include##colour=cyan
 public##colour=cyan
 private##colour=cyan
 protected##colour=cyan
-unless##colour=purple
-case##colour=purple
-when##colour=purple
+unless##colour=magenta
+case##colour=magenta
+when##colour=magenta
 do##colour=yellow
-if##colour=purple
-else##colour=purple
+if##colour=magenta
+else##colour=magenta
 puts##colour=blue
 print##colour=blue
 each##colour=green
@@ -50,6 +50,6 @@ nil##colour=cyan
 -=##colour=white
 +=##colour=white
 =##colour=white
-{##colour=white
-}##colour=white
-exit##colour=purple
+{##colour=red
+}##colour=red
+exit##colour=magenta

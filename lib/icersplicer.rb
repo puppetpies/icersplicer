@@ -9,6 +9,7 @@
 #
 ########################################################################
 require 'file-tail'
+require 'rainbow'
 
 
 module Icersplicer
@@ -17,14 +18,14 @@ module Icersplicer
   
     attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug, :nolinenumbers
     
-    COLOURS = {"black" => 0,
-               "red" => 1, 
-               "green" => 2, 
-               "yellow" => 3, 
-               "blue" => 4,
-               "purple" => 5,
-               "cyan" => 6,
-               "white" => 7}
+    COLOURS = {0 => "black",
+               1 => "red", 
+               2 => "green", 
+               3 => "yellow", 
+               4 => "blue",
+               5 => "purple",
+               6 => "cyan",
+               7 => "white"}
 
     def initialize
       @fileopen = 0
@@ -92,14 +93,13 @@ module Icersplicer
       cpicker = [2,3,4,1,7,5,6] # Just a selection of colours
       keys.each {|n|
         if n[1].split("##")[1] == nil
-          text.gsub!("#{n[1]}", "\e[4;3#{cpicker[rand(cpicker.size)]}m#{n[1]}\e[0m\ \e[0;32m")
+          name = COLOURS[rand(COLOURS.size - 1)]
+          text.gsub!("#{n[1]}", Rainbow.new.wrap("#{n[1]}").send(name.to_sym))
         else
-          name = n[1].split("##")[1].split("=")[1]; puts "Name: #{name}" if @debug >= 3
-          cnum = COLOURS[name].to_i; puts "Colour Number: #{cnum}" if @debug >= 3
           nval = n[1].split("##")[0]; puts "Value: #{nval}" if @debug >= 3
-          text.gsub!("#{nval}", "\e[4;3#{cnum}m#{nval}\e[0m\ \e[0;32m")
+          name = n[1].split("##")[1].split("=")[1]; puts "Value: #{name}" if @debug >= 3
+          text.gsub!("#{nval}", Rainbow.new.wrap("#{nval}").send(name.to_sym))
         end
-        text.gsub!(" \e[0;32m", "\e[0;32m")
       }
       return text
     end
@@ -158,7 +158,7 @@ module Icersplicer
 
     def print_to_screen(linenum, text, quiet)
       unless @nolinenumbers == true or quiet == true
-        print "\e[1;33mLn: #{linenum}:\e[0m\ "
+        print Rainbow.new.wrap("Ln: #{linenum}:").yellow
       end
       print "#{text}" unless quiet == true
     end

@@ -11,12 +11,46 @@
 require 'file-tail'
 require 'rainbow'
 
+module OutputFile
+
+    @@fileopen = 0
+    
+    def open(outputfile)
+      begin
+        puts "Openfile: #{outputfile}" if @debug >= 1
+        @export = File.open("#{outputfile}", 'w')
+      rescue Errno::EACCES
+        raise IOError, "Can't create file please check file / directory permissions"
+      end
+    end
+
+    def write(data)
+      @export.write(data)
+    end
+
+    def close
+      begin
+        @export.close
+        puts "Closing file"
+      rescue NoMethodError
+      end
+    end
+
+    def processdata(data, outputfile, quietmode)
+      open(outputfile) if @@fileopen == 0
+      write(data)
+      @@fileopen += 1
+    end
+    
+end
 
 module Icersplicer
 
   class FileProcessor
   
     attr_writer :nohighlighter, :skip_lines, :keywordsfile, :debug, :nolinenumbers
+    
+    include OutputFile
     
     COLOURS = {0 => "black",
                1 => "red", 
@@ -28,7 +62,6 @@ module Icersplicer
                7 => "white"}
 
     def initialize
-      @fileopen = 0
       @keywordsfile = "keywords.ice"
       @debug = 0
       @nolinenumbers = false
@@ -161,33 +194,6 @@ module Icersplicer
         print Rainbow.new.wrap("Ln: #{linenum}:").yellow
       end
       print "#{text}" unless quiet == true
-    end
-
-    def openfile(outputfile)
-      begin
-        puts "Openfile: #{outputfile}" if @debug >= 1
-        @export = File.open("#{outputfile}", 'w')
-      rescue Errno::EACCES
-        raise IOError, "Can't create file please check file / directory permissions"
-      end
-    end
-
-    def writefile(data)
-      @export.write(data)
-    end
-
-    def closefile
-      begin
-        @export.close
-        puts "Closing file"
-      rescue NoMethodError
-      end
-    end
-
-    def processdata(data, outputfile, quietmode)
-      openfile(outputfile) if @fileopen == 0
-      writefile(data)
-      @fileopen += 1
     end
 
     def stats(inputfile, outputfile)

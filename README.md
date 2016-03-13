@@ -1,6 +1,8 @@
 Icersplicer
 ==========
 
+Updated to the Gem are discontinued as i now maintain a Crystal version of icersplicer as https://github.com/puppetpies/icecrystals
+
 [![Gem Version](https://badge.fury.io/rb/icersplicer.svg)](https://badge.fury.io/rb/icersplicer)
 
 ~~~~~
